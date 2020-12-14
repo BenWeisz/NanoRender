@@ -1,10 +1,21 @@
-#include <iostream>
-#include "pimage.h"
+#include "timage.h"
+#include "draw.h"
 
-int main() 
-{
-    PImage *p = new PImage(100, 100);
-    std::cout << "Hello World" << std::endl;
+int main() {
+    TImage image(100, 100);
 
-    delete p;
+    TColour red(255, 0, 0);
+    TColour white(255, 255, 255);
+
+    line(50, 50, 50, 100, image, red);
+    line(50, 50, 100, 50, image, red);
+    line(50, 50, 50, 0, image, red);
+    line(50, 50, 0, 50, image, red);
+
+    line(50, 50, 100, 100, image, white);
+    line(50, 50, 100, 0, image, white);
+    line(50, 50, 0, 0, image, white);
+    line(50, 50, 0, 100, image, white);
+    
+    image.write("test.tga");
 }

@@ -1,2 +1,2 @@
 build:
-	g++ -o main main.cpp pimage.cpp	
+	g++ -o main main.cpp timage.cpp	draw.cpp
