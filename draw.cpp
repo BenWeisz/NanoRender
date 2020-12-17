@@ -23,7 +23,6 @@ void line(int x0, int y0, int x1, int y1, TImage &image, const TColour &color) {
     float delta_err = std::abs(dy / dx);
 
     float err = 0.0;
-
     int y = y0;
 
     if (steep) {
