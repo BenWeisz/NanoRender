@@ -10,7 +10,9 @@ Project's current state: **Got basic triangle flat shading working**
 Currently working on using triangle normals to flat shade triangles
 
 Wireframe rendering
+
 ![](out/wireframe.png)
 
-Flat Shading Triangles
+Flat Shading Triangles (Thanks @rajvirsamrai for the colour scheme suggestion)
+
 ![](out/flat_red.png)
