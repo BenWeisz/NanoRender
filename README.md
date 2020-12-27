@@ -13,6 +13,6 @@ Wireframe rendering
 
 ![](out/wireframe.png)
 
-Flat Shading Triangles (Thanks @rajvirsamrai for the colour scheme suggestion)
+Flat Shading Triangles (Thanks [@rajvirsamrai](https://github.com/rajvirsamrai) for the colour scheme suggestion)
 
 ![](out/flat_red.png)
