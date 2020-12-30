@@ -8,8 +8,9 @@
 
 class Face {
     public:
+        Vec3f m_Data[3];
         Face(const Vec3f v1, const Vec3f v2, const Vec3f v3);
-        Vec3f m_v1, m_v2, m_v3;
+        Vec3f operator[](int i) const;
 };
 
 class Model {

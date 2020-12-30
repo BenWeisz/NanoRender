@@ -8,9 +8,13 @@
 #include "model.h"
 
 Face::Face(const Vec3f v1, const Vec3f v2, const Vec3f v3) {
-    m_v1 = v1;
-    m_v2 = v2;
-    m_v3 = v3;
+    m_Data[0] = v1;
+    m_Data[1] = v2;
+    m_Data[2] = v3;
+}
+
+Vec3f Face::operator[](int i) const {
+    return m_Data[i];
 }
 
 void Model::loadModel(const std::string &file_name) {
