@@ -1,21 +1,44 @@
 #ifndef GEO_H
 #define GEO_H
 
-class Vec3f {
+#include <cstring>
+#include <cassert>
+#include <iostream>
+
+template <typename T, size_t N>
+class Vec {
     public:
-        float m_v1, m_v2, m_v3;
-        Vec3f(const float &v1, const float &v2, const float &v3);
-        Vec3f() : m_v1(.0f), m_v2(.0f), m_v3(.0f) {};
+        T m_Data[N];
+        Vec() { memset(m_Data, 0, sizeof(T) * N); };
+        Vec(T (&data)[N]) {
+            for (int i = 0; i < N; i++) m_Data[i] = data[i];
+        }
+        Vec(std::initializer_list<T> data) {
+            assert(data.size() == N);
+            std::copy(data.begin(), data.end(), m_Data);
+        }
+        T operator[](int i) {
+            return m_Data[i];
+        }
+        Vec operator+(const Vec &other) const {
+            Vec r;
+            for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] + other.m_Data[i];
+            return r;
+        }
+        Vec operator-(const Vec &other) const {
+            Vec r;
+            for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] - other.m_Data[i];
+            return r;
+        }
+        Vec operator*(float c) const {
+            Vec r;
+            for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] * c;
+            return r;
+        }
 };
 
-class Vec2f {
-    public:
-        float m_v1, m_v2;
-        Vec2f(const float &v1, const float &v2);
-        Vec2f() : m_v1(.0f), m_v2(.0f) {};
-        Vec2f operator-(const Vec2f &o);
-        float dydx();
-};
+typedef Vec<float, 2> Vec2f;
+typedef Vec<float, 3> Vec3f;
 
 bool point_is_in_triangle(Vec2f &v1, Vec2f &v2, Vec2f &v3, Vec2f &p);
 

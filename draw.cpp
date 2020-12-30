@@ -50,17 +50,18 @@ void line(int x0, int y0, int x1, int y1, TImage &image, const TColour &color) {
 }
 
 void triangle(Vec2f &v1, Vec2f &v2, Vec2f &v3, TImage &image, const TColour &color) {
-    float max_x = std::max(v1.m_v1, std::max(v2.m_v1, v3.m_v1));
-    float max_y = std::max(v1.m_v2, std::max(v2.m_v2, v3.m_v2));
+    float max_x = std::max(v1[0], std::max(v2[0], v3[0]));
+    float max_y = std::max(v1[1], std::max(v2[1], v3[1]));
 
-    float min_x = std::min(v1.m_v1, std::min(v2.m_v1, v3.m_v1));
-    float min_y = std::min(v1.m_v2, std::min(v2.m_v2, v3.m_v2));
+    float min_x = std::min(v1[0], std::min(v2[0], v3[0]));
+    float min_y = std::min(v1[1], std::min(v2[1], v3[1]));
 
     for (int y = (int)min_y; y <= (int)max_y; y++) {
         for (int x = (int)min_x; x <= (int)max_x; x++) {
-            Vec2f p((float)x, (float)y);
+            Vec2f p({(float)x, (float)y});
+
             if (point_is_in_triangle(v1, v2, v3, p)) {
-                image.setPixel(p.m_v1, p.m_v2, color);
+                image.setPixel(p[0], p[1], color);
             }
         }
     }

@@ -34,11 +34,11 @@ void Model::loadModel(const std::string &file_name) {
         if (!line.compare(0, 2, "v ")) {
             iss >> trash;
             
-            float x, y, z;
-            iss >> x;
-            iss >> y;
-            iss >> z;
-            Vec3f vert(x, y, z);
+            float d[3];
+            iss >> d[0];
+            iss >> d[1];
+            iss >> d[2];
+            Vec3f vert(d);
 
             verts.push_back(vert);
         }
