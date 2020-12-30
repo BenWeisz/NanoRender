@@ -5,8 +5,14 @@ Some parts of this projected were written using **ssloy**'s code as a guide.
 
 Thank you to **PaulBourke** at [http://paulbourke.net/](http://paulbourke.net/) for the descriptions on how the **[TGA](http://paulbourke.net/dataformats/tga/)** and **[OBJ](http://paulbourke.net/dataformats/obj/)** file formats work.
 
-Project's current state: **Got wireframe rendering working**
+Project's current state: **Got basic triangle flat shading working**
 
-Currently working on drawing triangles
+Currently working on using triangle normals to flat shade triangles
 
-![](out/test.png)
+Wireframe rendering
+
+![](out/wireframe.png)
+
+Flat Shading Triangles (Thanks [@rajvirsamrai](https://github.com/rajvirsamrai) for the colour scheme suggestion)
+
+![](out/flat_red.png)
