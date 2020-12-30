@@ -17,7 +17,10 @@ class Vec {
             assert(data.size() == N);
             std::copy(data.begin(), data.end(), m_Data);
         }
-        T operator[](int i) {
+        T operator[](const int i) {
+            return m_Data[i];
+        }
+        T operator[](const int i) const {
             return m_Data[i];
         }
         Vec operator+(const Vec &other) const {

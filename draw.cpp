@@ -49,6 +49,10 @@ void line(int x0, int y0, int x1, int y1, TImage &image, const TColour &color) {
     }
 }
 
+void line2d(const Vec2f &v1, const Vec2f &v2, TImage &image, const TColour &color) {
+    line(v1[0], v1[1], v2[0], v2[1], image, color);
+}
+
 void flat_triangle(Vec2f &v1, Vec2f &v2, Vec2f &v3, TImage &image, const TColour &color) {
     float max_x = std::max(v1[0], std::max(v2[0], v3[0]));
     float max_y = std::max(v1[1], std::max(v2[1], v3[1]));
