@@ -93,6 +93,6 @@ int main() {
     m.loadModel("./obj/african_head.obj");
 
     draw_red_flat_triangles(500, 500, m);
-    draw_normal_inensity_mapped_triangles(1000, 1000, m);
+    draw_normal_inensity_mapped_triangles(500, 500, m);
     draw_wireframe(500, 500, m);
 }
