@@ -92,15 +92,7 @@ int main() {
     Model m;
     m.loadModel("./obj/african_head.obj");
 
-    //draw_red_flat_triangles(500, 500, m);
+    draw_red_flat_triangles(500, 500, m);
     draw_normal_inensity_mapped_triangles(1000, 1000, m);
-    //draw_wireframe(500, 500, m);
+    draw_wireframe(500, 500, m);
 }
-
-/* TODO: Commit comment
-    -   Updated make file so it can be compiled on mac and windows wsl + ubuntu
-    -   Add norm + magnitude functions to the vector class
-    -   Add cross product function + added vector printing function
-    -   Add function for calculating dot product of vectors
-    -   Add code to render face model with normal vector intensity shading
-*/
