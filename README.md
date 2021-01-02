@@ -5,10 +5,9 @@ Some parts of this projected were written using **ssloy**'s code as a guide.
 
 Thank you to **PaulBourke** at [http://paulbourke.net/](http://paulbourke.net/) for the descriptions on how the **[TGA](http://paulbourke.net/dataformats/tga/)** and **[OBJ](http://paulbourke.net/dataformats/obj/)** file formats work.
 
-Project's current state: **Got basic triangle flat shading working**
+Project's current state: **Got model rendering with triangles. Colours are based on how each triangle reflects colour**
 
-Currently working on using triangle normals to flat shade triangles
-
+Currently working on z-buffer tutorial
 Wireframe rendering
 
 ![](out/wireframe.png)
@@ -16,3 +15,7 @@ Wireframe rendering
 Flat Shading Triangles (Thanks [@rajvirsamrai](https://github.com/rajvirsamrai) for the colour scheme suggestion)
 
 ![](out/flat_red.png)
+
+Simple Intensity Shading
+
+![](out/intensity_mapped.png)
