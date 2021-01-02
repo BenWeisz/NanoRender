@@ -3,6 +3,8 @@
 
 #include <cstring>
 #include <cassert>
+#include <cmath>
+#include <type_traits>
 #include <iostream>
 
 template <typename T, size_t N>
@@ -37,6 +39,51 @@ class Vec {
             Vec r;
             for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] * c;
             return r;
+        }
+        bool is_numeric() const {
+            return std::is_same<T, float>::value || std::is_same<T, double>::value;
+        }
+        T magnitude() {
+            assert(is_numeric());
+
+            T squared_sum = 0.0;
+            for (int i = 0; i < N; i++) squared_sum += m_Data[i] * m_Data[i];
+            
+            return std::sqrt(squared_sum);
+        }
+        Vec norm() {
+            assert(is_numeric());
+            
+            T mag = magnitude();
+            return (*this) * (1.0 / mag);
+        }
+        Vec cross(const Vec &other) const {
+            assert(is_numeric());
+            assert(N == 3);
+
+            Vec r;
+            r.m_Data[0] = m_Data[1] * other.m_Data[2] - other.m_Data[1] * m_Data[2];
+            r.m_Data[1] = m_Data[2] * other.m_Data[0] - other.m_Data[2] * m_Data[0];
+            r.m_Data[2] = m_Data[0] * other.m_Data[1] - other.m_Data[0] * m_Data[1];
+            
+            return r;
+        }
+        T dot(const Vec &other) {
+            assert(is_numeric());
+            T dot_product = 0.0;
+            for (int i = 0; i < N; i++) dot_product += m_Data[i] * other.m_Data[i];
+
+            return dot_product;
+        }
+        friend std::ostream& operator<<(std::ostream& os, const Vec& v) {
+            os << "(";
+            for (int i = 0; i < N; i++) {
+                os << v[i];
+                if (i < N - 1)
+                    os << ", ";
+            }
+            os << ")";
+            return os;
         }
 };
 
