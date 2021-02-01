@@ -6,7 +6,7 @@
 #include "geometry.h"
 
 void draw_wireframe(const int width, const int height, const Model &model) {
-    TImage image(width, height);
+    TImage image(width, height); 
     
     for (int i = 0; i < model.m_faces.size(); i++) {
         Vec3f v1 = model.m_faces.at(i)[0];
