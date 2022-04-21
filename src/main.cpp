@@ -1,17 +1,17 @@
 #include <iostream>
 
-#include "timage.h"
 #include "draw.h"
-#include "model.h"
 #include "geometry.h"
+#include "model.h"
+#include "timage.h"
 
 void draw_wireframe(const int width, const int height, const Model &model) {
-    TImage image(width, height); 
-    
+    TImage image(width, height);
+
     for (int i = 0; i < model.m_faces.size(); i++) {
         Vec3f v1 = model.m_faces.at(i)[0];
         Vec3f v2 = model.m_faces.at(i)[1];
-        Vec3f v3 = model.m_faces.at(i)[2];    
+        Vec3f v3 = model.m_faces.at(i)[2];
 
         int hw = width / 2;
         int hh = height / 2;
@@ -32,11 +32,11 @@ void draw_wireframe(const int width, const int height, const Model &model) {
 
 void draw_red_flat_triangles(const int width, const int height, const Model &model) {
     TImage image(width, height);
-    
+
     for (int i = 0; i < model.m_faces.size(); i++) {
         Vec3f v1 = model.m_faces.at(i)[0];
         Vec3f v2 = model.m_faces.at(i)[1];
-        Vec3f v3 = model.m_faces.at(i)[2];    
+        Vec3f v3 = model.m_faces.at(i)[2];
 
         int hw = width / 2;
         int hh = height / 2;
@@ -53,14 +53,14 @@ void draw_red_flat_triangles(const int width, const int height, const Model &mod
 
 void draw_normal_inensity_mapped_triangles(const int width, const int height, const Model &model) {
     TImage image(width, height);
-    
+
     Vec3f lighting_dir({0.0, 0.0, 1.0});
     lighting_dir = lighting_dir.norm();
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         Vec3f v1 = model.m_faces.at(i)[0];
         Vec3f v2 = model.m_faces.at(i)[1];
-        Vec3f v3 = model.m_faces.at(i)[2];    
+        Vec3f v3 = model.m_faces.at(i)[2];
 
         // Light Intensity Computations
         Vec3f v1v2 = v2 - v1;
@@ -90,7 +90,7 @@ void draw_normal_inensity_mapped_triangles(const int width, const int height, co
 
 int main() {
     Model m;
-    m.loadModel("./obj/african_head.obj");
+    m.loadModel("../obj/diablo3_pose.obj");
 
     draw_red_flat_triangles(500, 500, m);
     draw_normal_inensity_mapped_triangles(500, 500, m);
