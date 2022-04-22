@@ -34,8 +34,10 @@ class TColour {
 class TImage {
    public:
     TImage(const std::uint16_t &width, const std::uint16_t &height);
+    TImage(const std::string &filename);
     ~TImage();
     bool write(const std::string &fileName);
+    bool read(const std::string &filename);
     void setPixel(const int &x, const int &y, const TColour &colour);
     void setColour(const TColour &colour);
     std::pair<uint16_t, uint16_t> get_dimensions();

@@ -8,6 +8,10 @@ TImage::TImage(const std::uint16_t &width, const std::uint16_t &height) {
     memset(m_buffer, 0x00, width * height * 3);
 }
 
+TImage::TImage(const std::string &filename) {
+    read(filename);
+}
+
 TImage::~TImage() {
     delete[] m_buffer;
 }
@@ -52,6 +56,27 @@ bool TImage::write(const std::string &fileName) {
 
     delete header;
     out.close();
+    return true;
+}
+
+bool TImage::read(const std::string &filename) {
+    std::ifstream in;
+    in.open(filename, std::ios::binary);
+
+    if (!in.is_open()) {
+        std::cout << "Can't read file: " << filename << std::endl;
+        in.close();
+        return false;
+    }
+
+    in.seekg(12, std::ios::beg);
+    in.read((char *)&m_width, sizeof(std::uint16_t));
+    in.read((char *)&m_height, sizeof(std::uint16_t));
+    in.seekg(18, std::ios::beg);
+
+    m_buffer = (std::uint8_t *)malloc(sizeof(std::uint8_t) * m_width * m_height * 3);
+    in.read((char *)m_buffer, sizeof(std::uint8_t) * m_width * m_height * 3);
+
     return true;
 }
 
