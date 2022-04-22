@@ -10,12 +10,12 @@ Project's current state: **Got model rendering with triangles. Colours are based
 Currently working on z-buffer tutorial
 Wireframe rendering
 
-![](out/wireframe.png)
+![](samples/wireframe.png)
 
 Flat Shading Triangles (Thanks [@rajvirsamrai](https://github.com/rajvirsamrai) for the colour scheme suggestion)
 
-![](out/flat_red.png)
+![](samples/flat_red.png)
 
 Simple Intensity Shading
 
-![](out/intensity_mapped.png)
+![](samples/intensity_mapped.png)
