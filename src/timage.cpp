@@ -1,11 +1,3 @@
-#include <cstdint>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 #include "timage.h"
 
 TImage::TImage(const std::uint16_t &width, const std::uint16_t &height) {
@@ -69,6 +61,18 @@ void TImage::setPixel(const int &x, const int &y, const TColour &colour) {
     m_buffer[pixel_start + 0] = colour.m_b;
     m_buffer[pixel_start + 1] = colour.m_g;
     m_buffer[pixel_start + 2] = colour.m_r;
+}
+
+void TImage::setColour(const TColour &colour) {
+    for (int i = 0; i < m_height * m_width; i++) {
+        m_buffer[i * 3] = colour.m_b;
+        m_buffer[i * 3 + 1] = colour.m_g;
+        m_buffer[i * 3 + 2] = colour.m_r;
+    }
+}
+
+std::pair<uint16_t, uint16_t> TImage::get_dimensions() {
+    return std::pair<u_int16_t, u_int16_t>(m_width, m_height);
 }
 
 // TColour

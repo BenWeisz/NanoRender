@@ -1,26 +1,31 @@
+#include "geometry.h"
+
 #include <algorithm>
 #include <iostream>
 
-#include "geometry.h"
+int barycentric_coords(Vec3f *points, Vec3f &query, Vec3f &out) {
+    float d11 = points[1][1] - points[2][1];
+    float d21 = points[2][1] - points[0][1];
+    float d31 = points[0][1] - points[1][1];
 
-bool point_is_in_triangle(Vec2f &v1, Vec2f &v2, Vec2f &v3, Vec2f &p) {
-    // This code would be dependent on the rotational order of v1, v2, v3.
-    // But as long as we define vec_1, vec_2, vec_3 to be vectors in a 3-cycle
-    // the booleans only need be the same value.
-    bool v1_side = point_is_on_right_side(v1, v2, p);
-    bool v2_side = point_is_on_right_side(v2, v3, p);
-    bool v3_side = point_is_on_right_side(v3, v1, p);
+    float det_A = (points[0][0] * d11) + (points[1][0] * d21) + (points[2][0] * d31);
+    if (det_A == 0)
+        return -1;
 
-    return v1_side == v2_side && v2_side == v3_side;
-}
+    float d12 = points[2][0] - points[1][0];
+    float d22 = points[0][0] - points[2][0];
+    float d32 = points[1][0] - points[0][0];
 
-bool point_is_on_right_side(Vec2f &v1, Vec2f &v2, Vec2f &p) {
-    Vec2f dir = v2 - v1;
-    Vec2f mapped_p = p - v1;
+    float d13 = (points[1][0] * points[2][1]) - (points[2][0] * points[1][1]);
+    float d23 = (points[2][0] * points[0][1]) - (points[0][0] * points[2][1]);
+    float d33 = (points[0][0] * points[1][1]) - (points[1][0] * points[0][1]);
 
-    if (dir[0] == 0) 
-        return (mapped_p[0] >= 0) ^ (dir[1] < 0);
+    float c1 = ((d11 * query[0]) + (d12 * query[1]) + d13) / det_A;
+    float c2 = ((d21 * query[0]) + (d22 * query[1]) + d23) / det_A;
+    float c3 = ((d31 * query[0]) + (d32 * query[1]) + d33) / det_A;
+    if (c1 < 0 || c2 < 0 || c3 < 0)
+        return -1;
 
-    float dir_dydx = dir[1] / dir[0];
-    return ((dir_dydx * mapped_p[0]) > mapped_p[1]) ^ (dir[0] * -1 >= 0);
+    out = Vec3f({c1, c2, c3});
+    return 0;
 }
