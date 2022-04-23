@@ -91,29 +91,29 @@ typedef Vec<float, 2> Vec2f;
 typedef Vec<float, 3> Vec3f;
 
 template <class T>
-bool point_is_in_triangle(T &v1, T &v2, T &v3, T &p) {
+bool point_is_in_triangle(const T &v1, const T &v2, const T &v3, const T &p) {
     // This code would be dependent on the rotational order of v1, v2, v3.
     // But as long as we define vec_1, vec_2, vec_3 to be vectors in a 3-cycle
     // the booleans only need be the same value.
-    bool v1_side = point_is_on_right_side(v1, v2, p);
-    bool v2_side = point_is_on_right_side(v2, v3, p);
-    bool v3_side = point_is_on_right_side(v3, v1, p);
+    const bool v1_side = point_is_on_right_side(v1, v2, p);
+    const bool v2_side = point_is_on_right_side(v2, v3, p);
+    const bool v3_side = point_is_on_right_side(v3, v1, p);
 
     return v1_side == v2_side && v2_side == v3_side;
 }
 
 template <class T>
-bool point_is_on_right_side(T &v1, T &v2, T &p) {
-    T dir = v2 - v1;
-    T mapped_p = p - v1;
+bool point_is_on_right_side(const T &v1, const T &v2, const T &p) {
+    const T dir = v2 - v1;
+    const T mapped_p = p - v1;
 
     if (dir[0] == 0)
         return (mapped_p[0] >= 0) ^ (dir[1] < 0);
 
-    float dir_dydx = dir[1] / dir[0];
+    const float dir_dydx = dir[1] / dir[0];
     return ((dir_dydx * mapped_p[0]) > mapped_p[1]) ^ (dir[0] * -1 >= 0);
 }
 
-int barycentric_coords(Vec3f *points, Vec3f &query, Vec3f &out);
+int barycentric_coords(Vec3f *const points, const Vec3f &query, Vec3f &out);
 
 #endif  // GEO_H

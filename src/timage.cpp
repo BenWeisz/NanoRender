@@ -1,5 +1,7 @@
 #include "timage.h"
 
+TImage::TImage() {}
+
 TImage::TImage(const std::uint16_t &width, const std::uint16_t &height) {
     m_width = width;
     m_height = height;
@@ -96,11 +98,12 @@ void TImage::setColour(const TColour &colour) {
     }
 }
 
-std::pair<uint16_t, uint16_t> TImage::get_dimensions() {
+const std::pair<uint16_t, uint16_t> TImage::get_dimensions() {
     return std::pair<u_int16_t, u_int16_t>(m_width, m_height);
 }
 
 // TColour
+
 TColour::TColour(const std::uint8_t &r, const std::uint8_t &g, const std::uint8_t &b) {
     m_r = r;
     m_g = g;

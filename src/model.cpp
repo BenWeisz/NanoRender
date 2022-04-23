@@ -35,6 +35,10 @@ Vec2f TextureFace::operator[](int i) const {
     return m_Data[i];
 }
 
+Model::~Model() {
+    delete m_textures;
+}
+
 void Model::loadModel(const std::string &file_name, const bool load_textures) {
     std::ifstream in_file;
     in_file.open(file_name);
@@ -94,4 +98,8 @@ void Model::loadModel(const std::string &file_name, const bool load_textures) {
             m_faces.push_back(face);
         }
     }
+}
+
+void Model::loadTextures(const std::string &file_name) {
+    m_textures = new TImage(file_name);
 }

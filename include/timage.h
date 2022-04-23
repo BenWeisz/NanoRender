@@ -27,12 +27,14 @@ typedef struct TImageHeader {
 
 class TColour {
    public:
-    std::uint8_t m_r, m_g, m_b;
     TColour(const std::uint8_t &r, const std::uint8_t &g, const std::uint8_t &b);
+    std::uint8_t m_r, m_g, m_b;
 };
 
 class TImage {
    public:
+    TImage();
+    TImage(const TImage &other);
     TImage(const std::uint16_t &width, const std::uint16_t &height);
     TImage(const std::string &filename);
     ~TImage();
@@ -40,12 +42,18 @@ class TImage {
     bool read(const std::string &filename);
     void setPixel(const int &x, const int &y, const TColour &colour);
     void setColour(const TColour &colour);
-    std::pair<uint16_t, uint16_t> get_dimensions();
+    TColour getColour(const std::uint16_t x, const std::uint16_t y);
+    const std::pair<uint16_t, uint16_t> get_dimensions();
 
    private:
+    std::uint8_t *m_buffer;
     std::uint16_t m_width,
         m_height;
-    std::uint8_t *m_buffer;
 };
+
+inline TColour TImage::getColour(const std::uint16_t x, const std::uint16_t y) {
+    const int offset = (m_width * y) + x;
+    return TColour(m_buffer[(3 * offset)], m_buffer[(3 * offset) + 1], m_buffer[(3 * offset) + 2]);
+}
 
 #endif  // TIMAGE_H

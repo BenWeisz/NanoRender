@@ -1,4 +1,5 @@
 main
 .vscode
 build/*
+debug/*
 .DS_Store
