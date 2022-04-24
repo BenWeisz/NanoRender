@@ -8,3 +8,4 @@ file(GLOB SOURCES "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
