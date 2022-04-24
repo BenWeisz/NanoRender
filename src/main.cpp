@@ -55,7 +55,7 @@ void draw_red_flat_triangles(const int width, const int height, const Model &mod
     image.write("./out/flat_red.tga");
 }
 
-void draw_normal_inensity_mapped_triangles(const int width, const int height, const Model &model) {
+void draw_normal_inensity_mapped_triangles(const int width, const int height, Model &model) {
     TImage image(width, height);
     const TColour cream(240, 226, 182);
     image.setColour(cream);
@@ -128,7 +128,7 @@ void draw_textured_model(const int width, const int height, Model &model) {
     }
 
     free(zbuffer);
-    image.write("./out/intensity_mapped.tga");
+    image.write("./out/texture_mapped.tga");
 }
 
 int main() {

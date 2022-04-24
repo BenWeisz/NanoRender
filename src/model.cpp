@@ -17,7 +17,9 @@ Face::Face(const Vec3f v1, const Vec3f v2, const Vec3f v3) {
 }
 
 Face::Face(const Vec3f v1, const Vec3f v2, const Vec3f v3, int texture_id) {
-    Face(v1, v2, v3);
+    m_Data[0] = v1;
+    m_Data[1] = v2;
+    m_Data[2] = v3;
     m_texture_id = texture_id;
 }
 
@@ -44,7 +46,6 @@ void Model::loadModel(const std::string &file_name, const bool load_textures) {
     in_file.open(file_name);
 
     if (in_file.fail()) {
-        std::cout << "Failed to read the file: " << file_name << std::endl;
         in_file.close();
         return;
     }
