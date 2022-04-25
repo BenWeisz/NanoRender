@@ -104,9 +104,12 @@ void draw_textured_model(const int width, const int height, Model &model) {
     const TColour cream(240, 226, 182);
     image.setColour(cream);
 
+    Vec3f lighting_dir({0.0, 0.0, 1.0});
+    lighting_dir = lighting_dir.norm();
+
     int *zbuffer = new int[width * height];
     for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MAX;
+        zbuffer[i] = INT_MIN;
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
@@ -116,15 +119,25 @@ void draw_textured_model(const int width, const int height, Model &model) {
         const Vec3f v2 = face[1];
         const Vec3f v3 = face[2];
 
-        // Rendering
-        const int hw = width / 2;
-        const int hh = height / 2;
+        // Light Intensity Computations
+        const Vec3f v1v2 = v2 - v1;
+        const Vec3f v1v3 = v3 - v1;
+        Vec3f normal = v1v2.cross(v1v3);
+        normal = normal.norm();
 
-        const Vec3f mapped_v1({(v1[0] * hw) + hw, (v1[1] * hh) + hh, v1[2]});
-        const Vec3f mapped_v2({(v2[0] * hw) + hw, (v2[1] * hh) + hh, v2[2]});
-        const Vec3f mapped_v3({(v3[0] * hw) + hw, (v3[1] * hh) + hh, v3[2]});
+        const float light_intensity = normal.dot(lighting_dir);
 
-        textured_triangle(mapped_v1, mapped_v2, mapped_v3, image, zbuffer, t_face, model);
+        if (light_intensity > 0) {
+            // Rendering
+            const int hw = width / 2;
+            const int hh = height / 2;
+
+            const Vec3f mapped_v1({(v1[0] * hw) + hw, (v1[1] * hh) + hh, v1[2]});
+            const Vec3f mapped_v2({(v2[0] * hw) + hw, (v2[1] * hh) + hh, v2[2]});
+            const Vec3f mapped_v3({(v3[0] * hw) + hw, (v3[1] * hh) + hh, v3[2]});
+
+            textured_triangle(mapped_v1, mapped_v2, mapped_v3, light_intensity, image, zbuffer, t_face, model);
+        }
     }
 
     free(zbuffer);
@@ -132,15 +145,12 @@ void draw_textured_model(const int width, const int height, Model &model) {
 }
 
 int main() {
-    // Model m;
-    // m.loadModel("../models/texture_test.obj", true);
-    // m.loadTextures("../models/african_head_diffuse.tga");
+    Model m;
+    m.loadModel("../models/african_head.obj", true);
+    m.loadTextures("../models/african_head_diffuse.tga");
 
-    // draw_textured_model(500, 500, m);
+    draw_textured_model(500, 500, m);
     // draw_red_flat_triangles(500, 500, m);
     // draw_normal_inensity_mapped_triangles(500, 500, m);
     // draw_wireframe(500, 500, m);
-
-    TImage img("../models/african_head_diffuse.tga");
-    // img.write("./out/bence.tga");
 }

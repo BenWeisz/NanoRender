@@ -1,4 +1,5 @@
 # NanoRender
+
 Own version of TinyRenderer by **ssloy** --> [Link](https://github.com/ssloy/tinyrenderer)
 
 Some parts of this projected were written using **ssloy**'s code as a guide.
@@ -19,3 +20,7 @@ Flat Shading Triangles (Thanks [@rajvirsamrai](https://github.com/rajvirsamrai) 
 Simple Intensity Shading
 
 ![](samples/intensity_mapped.png)
+
+Textured Model with Intensity Shading
+
+![](samples/texture_mapped.png)

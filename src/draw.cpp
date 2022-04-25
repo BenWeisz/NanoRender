@@ -98,7 +98,7 @@ void flat_triangle3(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &i
     }
 }
 
-void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &image, int *const zbuffer, const TextureFace &texture, Model &model) {
+void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const float light_intensity, TImage &image, int *const zbuffer, const TextureFace &texture, Model &model) {
     const float max_x = std::max(v1[0], std::max(v2[0], v3[0]));
     const float max_y = std::max(v1[1], std::max(v2[1], v3[1]));
 
@@ -120,8 +120,8 @@ void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage
 
                 const float z = v1[2] * bary_coords[0] + v2[2] * bary_coords[1] + v3[2] * bary_coords[2];
                 const int zbuffer_offset = dimensions.first * y + x;
-                if (zbuffer[zbuffer_offset] > z) {
-                    TColour colour = model.getTextureColour(texture.m_Data, bary_coords);
+                if (zbuffer[zbuffer_offset] < z) {
+                    TColour colour = model.getTextureColour(texture.m_Data, bary_coords) * light_intensity;
                     image.setPixel(p[0], p[1], colour);
                     zbuffer[zbuffer_offset] = z;
                 }

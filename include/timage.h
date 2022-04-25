@@ -29,6 +29,10 @@ class TColour {
    public:
     TColour(const std::uint8_t &r, const std::uint8_t &g, const std::uint8_t &b);
     std::uint8_t m_r, m_g, m_b;
+    TColour operator*(float c) const {
+        TColour r(m_r * c, m_g * c, m_b * c);
+        return r;
+    }
 };
 
 class TImage {

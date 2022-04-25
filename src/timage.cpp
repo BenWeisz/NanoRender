@@ -104,9 +104,51 @@ bool TImage::read(const std::string &file_name) {
             if (cmap_type != 0x00 || id_len != 0x00)
                 std::cout << "Colour map not supported: " << file_name << std::endl;
             else {
-                std::uint32_t image_end_addr = std::min(ext_addr, dev_addr);
-                std::uint32_t image_data_len = image_end_addr - 18;  // 18 Bytes are used for the header.
-                std::cout << "The image data len: " << image_data_len << " " << image_end_addr << std::endl;
+                std::uint32_t image_data_len;
+                if (ext_addr != 0 && dev_addr != 0) {
+                    image_data_len = std::min(ext_addr, dev_addr);
+                } else {
+                    in.seekg(0, std::ios::beg);
+                    int file_start = (int)in.tellg();
+                    in.seekg(0, std::ios::end);
+                    image_data_len = (int)in.tellg() - file_start;
+                }
+
+                image_data_len -= 18;  // 18 Bytes are used for the header.
+
+                in.seekg(18, std::ios::beg);
+
+                std::uint32_t bytes_eaten = 0;
+                std::uint32_t buffer_i = 0;
+                while (bytes_eaten < image_data_len) {
+                    std::uint8_t rep_field;
+                    in.read((char *)&rep_field, sizeof(std::uint8_t));
+
+                    std::uint8_t rep = rep_field & 0x7F;
+                    if (rep_field & 0x80) {  // The packet is a run length packet
+                        std::uint8_t pixel_v[3];
+                        in.read((char *)&pixel_v, sizeof(std::uint8_t) * 3);
+                        bytes_eaten += 4;
+
+                        for (int rep_i = 0; rep_i < rep + 1; rep_i++) {
+                            // We flip the intel order of bytes to rgb
+                            m_buffer[buffer_i] = pixel_v[2];
+                            m_buffer[buffer_i + 1] = pixel_v[1];
+                            m_buffer[buffer_i + 2] = pixel_v[0];
+                            buffer_i += 3;
+                        }
+                    } else {  // Raw data packet
+                        std::uint8_t pixel_v[3];
+                        bytes_eaten += 1 + (rep * 3);
+                        for (int rep_i = 0; rep_i < rep + 1; rep_i++) {
+                            in.read((char *)&pixel_v, sizeof(std::uint8_t) * 3);
+                            m_buffer[buffer_i] = pixel_v[2];
+                            m_buffer[buffer_i + 1] = pixel_v[1];
+                            m_buffer[buffer_i + 2] = pixel_v[0];
+                            buffer_i += 3;
+                        }
+                    }
+                }
             }
         } else {
             // Uncompressed format not supported for new TGA format.
