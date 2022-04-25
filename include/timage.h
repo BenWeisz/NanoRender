@@ -57,7 +57,7 @@ class TImage {
 
 inline TColour TImage::getColour(const std::uint16_t x, const std::uint16_t y) {
     const int offset = (m_width * y) + x;
-    return TColour(m_buffer[(3 * offset)], m_buffer[(3 * offset) + 1], m_buffer[(3 * offset) + 2]);
+    return TColour(m_buffer[(3 * offset) + 2], m_buffer[(3 * offset) + 1], m_buffer[(3 * offset)]);
 }
 
 #endif  // TIMAGE_H

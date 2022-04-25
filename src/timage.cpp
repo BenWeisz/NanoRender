@@ -132,19 +132,15 @@ bool TImage::read(const std::string &file_name) {
 
                         for (int rep_i = 0; rep_i < rep + 1; rep_i++) {
                             // We flip the intel order of bytes to rgb
-                            m_buffer[buffer_i] = pixel_v[2];
+                            m_buffer[buffer_i] = pixel_v[0];
                             m_buffer[buffer_i + 1] = pixel_v[1];
-                            m_buffer[buffer_i + 2] = pixel_v[0];
+                            m_buffer[buffer_i + 2] = pixel_v[2];
                             buffer_i += 3;
                         }
                     } else {  // Raw data packet
-                        std::uint8_t pixel_v[3];
                         bytes_eaten += 1 + (rep * 3);
                         for (int rep_i = 0; rep_i < rep + 1; rep_i++) {
-                            in.read((char *)&pixel_v, sizeof(std::uint8_t) * 3);
-                            m_buffer[buffer_i] = pixel_v[2];
-                            m_buffer[buffer_i + 1] = pixel_v[1];
-                            m_buffer[buffer_i + 2] = pixel_v[0];
+                            in.read((char *)&m_buffer[buffer_i], sizeof(std::uint8_t) * 3);
                             buffer_i += 3;
                         }
                     }
