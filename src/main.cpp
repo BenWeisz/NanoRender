@@ -132,12 +132,15 @@ void draw_textured_model(const int width, const int height, Model &model) {
 }
 
 int main() {
-    Model m;
-    m.loadModel("/Users/benweisz/dev/graphics/rendering/NanoRenderer/models/african_head.obj", true);
-    m.loadTextures("/Users/benweisz/dev/graphics/rendering/NanoRenderer/models/african_head_diffuse.tga");
+    // Model m;
+    // m.loadModel("../models/texture_test.obj", true);
+    // m.loadTextures("../models/african_head_diffuse.tga");
 
-    draw_textured_model(500, 500, m);
+    // draw_textured_model(500, 500, m);
     // draw_red_flat_triangles(500, 500, m);
     // draw_normal_inensity_mapped_triangles(500, 500, m);
     // draw_wireframe(500, 500, m);
+
+    TImage img("../models/african_head_diffuse.tga");
+    // img.write("./out/bence.tga");
 }

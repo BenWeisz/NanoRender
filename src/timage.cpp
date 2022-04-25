@@ -18,12 +18,12 @@ TImage::~TImage() {
     delete[] m_buffer;
 }
 
-bool TImage::write(const std::string &fileName) {
+bool TImage::write(const std::string &file_name) {
     std::ofstream out;
-    out.open(fileName, std::ios::binary);
+    out.open(file_name, std::ios::binary);
 
     if (!out.is_open()) {
-        std::cout << "Can't write file: " << fileName << std::endl;
+        std::cout << "Can't write file: " << file_name << std::endl;
         out.close();
         return false;
     }
@@ -44,14 +44,14 @@ bool TImage::write(const std::string &fileName) {
 
     out.write(reinterpret_cast<const char *>(header), sizeof(TImageHeader));
     if (!out) {
-        std::cout << "Can't write file: " << fileName << std::endl;
+        std::cout << "Can't write file: " << file_name << std::endl;
         out.close();
         return false;
     }
 
     out.write(reinterpret_cast<const char *>(m_buffer), sizeof(std::uint8_t) * m_width * m_height * 3);
     if (!out) {
-        std::cout << "Can't write file: " << fileName << std::endl;
+        std::cout << "Can't write file: " << file_name << std::endl;
         out.close();
         return false;
     }
@@ -61,23 +61,65 @@ bool TImage::write(const std::string &fileName) {
     return true;
 }
 
-bool TImage::read(const std::string &filename) {
+bool TImage::read(const std::string &file_name) {
     std::ifstream in;
-    in.open(filename, std::ios::binary);
+    in.open(file_name, std::ios::binary);
 
     if (!in.is_open()) {
-        std::cout << "Can't read file: " << filename << std::endl;
+        std::cout << "Can't read file: " << file_name << std::endl;
         in.close();
         return false;
     }
 
+    std::uint8_t id_len;
+    std::uint8_t cmap_type;
+    std::uint8_t data_type;
+
+    in.read((char *)&id_len, sizeof(std::uint8_t));
+    in.read((char *)&cmap_type, sizeof(std::uint8_t));
+    in.read((char *)&data_type, sizeof(std::uint8_t));
+
     in.seekg(12, std::ios::beg);
     in.read((char *)&m_width, sizeof(std::uint16_t));
     in.read((char *)&m_height, sizeof(std::uint16_t));
-    in.seekg(18, std::ios::beg);
 
+    // Allocate enough space for the uncompressed format
     m_buffer = (std::uint8_t *)malloc(sizeof(std::uint8_t) * m_width * m_height * 3);
-    in.read((char *)m_buffer, sizeof(std::uint8_t) * m_width * m_height * 3);
+
+    // Check the file version
+    // Get the file signature
+    in.seekg(-18, std::ios::end);
+    char c_signature[17];
+    c_signature[16] = 0x00;
+    in.read(c_signature, sizeof(char) * 16);
+    std::string signature(c_signature);
+
+    if (signature.compare(0, 15, "TRUEVISION-XFILE")) {
+        if (data_type == 0x0A) {
+            in.seekg(-26, std::ios::end);
+            std::uint32_t ext_addr, dev_addr;
+            in.read((char *)&ext_addr, sizeof(std::uint32_t));
+            in.read((char *)&dev_addr, sizeof(std::uint32_t));
+
+            if (cmap_type != 0x00 || id_len != 0x00)
+                std::cout << "Colour map not supported: " << file_name << std::endl;
+            else {
+                std::uint32_t image_end_addr = std::min(ext_addr, dev_addr);
+                std::uint32_t image_data_len = image_end_addr - 18;  // 18 Bytes are used for the header.
+                std::cout << "The image data len: " << image_data_len << " " << image_end_addr << std::endl;
+            }
+        } else {
+            // Uncompressed format not supported for new TGA format.
+            std::cout << "RLE compression for old TGA format not supported: " << file_name << std::endl;
+        }
+    } else {  // The old format
+        if (data_type == 0x0A) {
+            std::cout << "RLE compression for old TGA format not supported: " << file_name << std::endl;
+        } else {
+            in.seekg(18, std::ios::beg);
+            in.read((char *)m_buffer, sizeof(std::uint8_t) * m_width * m_height * 3);
+        }
+    }
 
     return true;
 }
