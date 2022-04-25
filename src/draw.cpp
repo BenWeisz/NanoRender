@@ -120,7 +120,7 @@ void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const 
 
                 const float z = v1[2] * bary_coords[0] + v2[2] * bary_coords[1] + v3[2] * bary_coords[2];
                 const int zbuffer_offset = dimensions.first * y + x;
-                if (zbuffer[zbuffer_offset] < z) {
+                if (zbuffer[zbuffer_offset] > z) {
                     TColour colour = model.getTextureColour(texture.m_Data, bary_coords) * light_intensity;
                     image.setPixel(p[0], p[1], colour);
                     zbuffer[zbuffer_offset] = z;

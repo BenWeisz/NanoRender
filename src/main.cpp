@@ -109,7 +109,7 @@ void draw_textured_model(const int width, const int height, Model &model) {
 
     int *zbuffer = new int[width * height];
     for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MIN;
+        zbuffer[i] = INT_MAX;
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
