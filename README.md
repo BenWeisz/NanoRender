@@ -21,6 +21,10 @@ Simple Intensity Shading
 
 ![](samples/intensity_mapped.png)
 
-Textured Model with Intensity Shading
+Textured Model with Intensity Shading in Orthographic Projection
 
-![](samples/texture_mapped.png)
+![](samples/texture_mapped_ortho.png)
+
+Textured Model with Intensity Shading in Perspective Projection
+
+![](samples/texture_mapped_proj.png)
