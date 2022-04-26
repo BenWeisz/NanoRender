@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>
+#include <iomanip>
 #include <iostream>
 #include <type_traits>
 
@@ -35,7 +36,7 @@ class Vec {
         for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] - other.m_Data[i];
         return r;
     }
-    Vec operator*(float c) const {
+    Vec operator*(T c) const {
         Vec r;
         for (int i = 0; i < N; i++) r.m_Data[i] = m_Data[i] * c;
         return r;
@@ -89,6 +90,109 @@ class Vec {
 
 typedef Vec<float, 2> Vec2f;
 typedef Vec<float, 3> Vec3f;
+template <typename T, size_t N, size_t M>
+class Mat {
+   public:
+    T m_Data[M * N];
+    Mat() { memset(m_Data, 0, sizeof(T) * M * N); };
+    Mat(T (&data)[M * N]) {
+        for (int i = 0; i < M * N; i++) m_Data[i] = data[i];
+    }
+    Mat(std::initializer_list<T> data) {
+        assert(data.size() == M * N);
+        std::copy(data.begin(), data.end(), m_Data);
+    }
+    T get(const int i, const int j) {
+        assert(i < M && j < N);
+        return m_Data[(i * N) + j];
+    }
+    T get(const int i, const int j) const {
+        assert(i < M && j < N);
+        return m_Data[(i * N) + j];
+    }
+    void set(const T v, const int i, const int j) {
+        assert(i < M && j < N);
+        m_Data[(i * N) + j] = v;
+    }
+    Mat operator+(const Mat &other) const {
+        assert(is_numeric());
+        assert(other.is_numeric());
+        Mat r;
+        for (int i = 0; i < M * N; i++) r.m_Data[i] = m_Data[i] + other.m_Data[i];
+        return r;
+    }
+    Mat operator-(const Mat &other) const {
+        assert(is_numeric());
+        assert(other.is_numeric());
+        Mat r;
+        for (int i = 0; i < M * N; i++) r.m_Data[i] = m_Data[i] - other.m_Data[i];
+        return r;
+    }
+    Mat operator*(const Mat &other) const {
+        assert(is_numeric());
+        assert(other.is_numeric());
+        Mat r;
+        for (int i = 0; i < M * N; i++) r.m_Data[i] = m_Data[i] * other.m_Data[i];
+        return r;
+    }
+    Mat operator*(const T c) const {
+        assert(is_numeric());
+        Mat r;
+        for (int i = 0; i < M * N; i++) r.m_Data[i] = m_Data[i] * c;
+        return r;
+    }
+    template <size_t oM, size_t oN>
+    Mat mul(Mat &other) {
+        assert(is_numeric());
+        assert(other.is_numeric());
+        Mat<T, M, oN> r;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < oN; j++) {
+                T total = 0;
+                for (int k = 0; k < N; k++) {
+                    total += get(i, k) * other.get(k, j);
+                }
+                r.set(total, i, j);
+            }
+        }
+        return r;
+    }
+    Vec<T, M> dot(Vec<T, M> &v) {
+        assert(is_numeric());
+        assert(v.is_numeric());
+        T vals[M];
+        for (int i = 0; i < M; i++) {
+            T total = 0.0;
+            for (int j = 0; j < N; j++) {
+                total += get(i, j) * v[j];
+            }
+            vals[i] = total;
+        }
+
+        Vec<T, M> r(vals);
+        return r;
+    }
+    bool is_numeric() const {
+        return std::is_same<T, float>::value || std::is_same<T, double>::value;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const Mat &v) {
+        std::streamsize old_precision = os.precision(3);
+        os << std::fixed << std::showpoint;
+        os << std::setprecision(3);
+
+        for (int i = 0; i < M; i++) {
+            os << "|";
+            for (int j = 0; j < N; j++) {
+                os << " " << v.get(i, j);
+            }
+            os << " |\n";
+        }
+
+        os << std::setprecision(old_precision);
+
+        return os;
+    }
+};
 
 template <class T>
 bool point_is_in_triangle(const T &v1, const T &v2, const T &v3, const T &p) {
