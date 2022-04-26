@@ -145,12 +145,14 @@ void draw_textured_model(const int width, const int height, Model &model) {
 }
 
 int main() {
-    Model m;
-    m.loadModel("../models/african_head.obj", true);
-    m.loadTextures("../models/african_head_diffuse.tga");
+    // Model m;
+    // m.loadModel("../models/african_head.obj", true);
+    // m.loadTextures("../models/african_head_diffuse.tga");
 
-    draw_textured_model(500, 500, m);
+    // draw_textured_model(500, 500, m);
     // draw_red_flat_triangles(500, 500, m);
     // draw_normal_inensity_mapped_triangles(500, 500, m);
     // draw_wireframe(500, 500, m);
+    auto a = get_3d_camera_model(4);
+    std::cout << a << std::endl;
 }

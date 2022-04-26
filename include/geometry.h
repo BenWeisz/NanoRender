@@ -90,6 +90,7 @@ class Vec {
 
 typedef Vec<float, 2> Vec2f;
 typedef Vec<float, 3> Vec3f;
+typedef Vec<float, 4> Vec4f;
 template <typename T, size_t N, size_t M>
 class Mat {
    public:
@@ -194,6 +195,9 @@ class Mat {
     }
 };
 
+typedef Mat<float, 3, 3> Mat33f;
+typedef Mat<float, 4, 4> Mat44f;
+
 template <class T>
 bool point_is_in_triangle(const T &v1, const T &v2, const T &v3, const T &p) {
     // This code would be dependent on the rotational order of v1, v2, v3.
@@ -219,5 +223,53 @@ bool point_is_on_right_side(const T &v1, const T &v2, const T &p) {
 }
 
 int barycentric_coords(Vec3f *const points, const Vec3f &query, Vec3f &out);
+
+template <size_t N>
+Mat<float, N, N> identity() {
+    Mat<float, N, N> r;
+    for (int i = 0; i < N; i++)
+        r.set(1.0, i, i);
+
+    return r;
+}
+
+template <size_t N>
+Vec<float, N + 1> to_homogeneous(const Vec<float, N> &vec) {
+    float vals[N + 1];
+    vals[N] = 1.0;
+
+    for (int i = 0; i < N; i++) {
+        vals[i] = vec[i];
+    }
+
+    Vec<float, N + 1> homo_vec(vals);
+    return homo_vec;
+}
+
+template <size_t N>
+Mat<float, N + 1, N + 1> to_homogeneous(const Mat<float, N, N> &mat) {
+    Mat<float, N + 1, N + 1> r = identity<N + 1>();
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            r.set(mat.get(i, j), i, j);
+        }
+    }
+    return r;
+}
+
+template <size_t N>
+Vec<float, N - 1> to_cartesian(const Vec<float, N> &vec) {
+    float vals[N - 1];
+    for (int i = 0; i < N - 1; i++)
+        vals[i] = vec[i];
+
+    Vec<float, N - 1> cart_vec(vals);
+    cart_vec = cart_vec * (1 / vec[N - 1]);
+    return cart_vec;
+}
+
+Mat<float, 3, 3> rotation_z(float angle);
+Mat<float, 3, 3> rotation_x(float angle);
+Mat<float, 4, 4> get_3d_camera_model(float c);
 
 #endif  // GEO_H
