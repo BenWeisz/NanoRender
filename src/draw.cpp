@@ -111,7 +111,7 @@ void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const 
         for (int x = (int)min_x; x <= (int)max_x; x++) {
             const Vec3f p({(float)x, (float)y, 1});
 
-            if (point_is_in_triangle<Vec3f>(v1, v2, v3, p)) {
+            if (point_is_in_triangle<Vec3f>(v1, v2, v3, p) && image.is_pixel_in_bounds(x, y)) {
                 Vec3f points[3] = {v1, v2, v3};
                 Vec3f bary_coords;
                 int r = barycentric_coords(points, p, bary_coords);

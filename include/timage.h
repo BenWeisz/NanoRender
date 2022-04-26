@@ -48,6 +48,7 @@ class TImage {
     void setColour(const TColour &colour);
     TColour getColour(const std::uint16_t x, const std::uint16_t y);
     const std::pair<uint16_t, uint16_t> get_dimensions();
+    bool is_pixel_in_bounds(const int &x, const int &y);
 
    private:
     std::uint8_t *m_buffer;

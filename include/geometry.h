@@ -143,7 +143,7 @@ class Mat {
         return r;
     }
     template <size_t oM, size_t oN>
-    Mat mul(Mat &other) {
+    Mat mul(const Mat &other) {
         assert(is_numeric());
         assert(other.is_numeric());
         Mat<T, M, oN> r;
@@ -158,7 +158,7 @@ class Mat {
         }
         return r;
     }
-    Vec<T, M> dot(Vec<T, M> &v) {
+    Vec<T, M> dot(const Vec<T, M> &v) {
         assert(is_numeric());
         assert(v.is_numeric());
         T vals[M];
@@ -268,8 +268,8 @@ Vec<float, N - 1> to_cartesian(const Vec<float, N> &vec) {
     return cart_vec;
 }
 
-Mat<float, 3, 3> rotation_z(float angle);
-Mat<float, 3, 3> rotation_x(float angle);
-Mat<float, 4, 4> get_3d_camera_model(float c);
+Mat33f rotation_z(const float angle);
+Mat33f rotation_x(const float angle);
+Mat44f get_3d_camera_model(const float c);
 
 #endif  // GEO_H

@@ -182,6 +182,10 @@ const std::pair<uint16_t, uint16_t> TImage::get_dimensions() {
     return std::pair<u_int16_t, u_int16_t>(m_width, m_height);
 }
 
+bool TImage::is_pixel_in_bounds(const int &x, const int &y) {
+    return x >= 0 && x < m_width && y >= 0 && y < m_height;
+}
+
 // TColour
 
 TColour::TColour(const std::uint8_t &r, const std::uint8_t &g, const std::uint8_t &b) {

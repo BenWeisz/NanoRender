@@ -27,8 +27,8 @@ int barycentric_coords(Vec3f *points, const Vec3f &query, Vec3f &out) {
     return 0;
 }
 
-Mat<float, 3, 3> rotation_z(float angle) {
-    Mat<float, 3, 3> r = identity<3>();
+Mat33f rotation_z(const float angle) {
+    Mat33f r = identity<3>();
     float cos_v = cos(angle);
     float sin_v = sin(angle);
     r.set(cos_v, 0, 0);
@@ -38,8 +38,8 @@ Mat<float, 3, 3> rotation_z(float angle) {
     return r;
 }
 
-Mat<float, 3, 3> rotation_x(float angle) {
-    Mat<float, 3, 3> r = identity<3>();
+Mat33f rotation_x(const float angle) {
+    Mat33f r = identity<3>();
     float cos_v = cos(angle);
     float sin_v = sin(angle);
     r.set(cos_v, 1, 1);
@@ -49,8 +49,8 @@ Mat<float, 3, 3> rotation_x(float angle) {
     return r;
 }
 
-Mat<float, 4, 4> get_3d_camera_model(float c) {
-    Mat<float, 4, 4> r = identity<4>();
+Mat44f get_3d_camera_model(const float c) {
+    Mat44f r = identity<4>();
     r.set(-1 / c, 3, 2);
     return r;
 }
