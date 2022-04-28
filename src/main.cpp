@@ -99,52 +99,7 @@ void draw_normal_inensity_mapped_triangles(const int width, const int height, Mo
     image.write("./out/intensity_mapped.tga");
 }
 
-void draw_textured_model_ortho(const int width, const int height, Model &model) {
-    TImage image(width, height);
-    const TColour cream(240, 226, 182);
-    image.setColour(cream);
-
-    Vec3f lighting_dir({0.0, 0.0, 1.0});
-    lighting_dir = lighting_dir.norm();
-
-    int *zbuffer = new int[width * height];
-    for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MAX;
-
-    for (int i = 0; i < model.m_faces.size(); i++) {
-        const Face face = model.m_faces.at(i);
-        const TextureFace t_face = model.m_texture_faces.at(face.m_texture_id);
-
-        const Vec3f v1 = face[0];
-        const Vec3f v2 = face[1];
-        const Vec3f v3 = face[2];
-
-        // Light Intensity Computations
-        const Vec3f v1v2 = v2 - v1;
-        const Vec3f v1v3 = v3 - v1;
-        Vec3f normal = v1v2.cross(v1v3);
-        normal = normal.norm();
-
-        const float light_intensity = normal.dot(lighting_dir);
-
-        if (light_intensity > 0) {
-            // Rendering
-            const int hw = width / 2;
-            const int hh = height / 2;
-
-            const Vec3f mapped_v1({(v1[0] * hw) + hw, (v1[1] * hh) + hh, v1[2]});
-            const Vec3f mapped_v2({(v2[0] * hw) + hw, (v2[1] * hh) + hh, v2[2]});
-            const Vec3f mapped_v3({(v3[0] * hw) + hw, (v3[1] * hh) + hh, v3[2]});
-
-            textured_triangle(mapped_v1, mapped_v2, mapped_v3, light_intensity, image, zbuffer, t_face, model);
-        }
-    }
-
-    free(zbuffer);
-    image.write("./out/texture_mapped_ortho.tga");
-}
-
-void draw_textured_model_proj(const int width, const int height, Model &model, Mat44f &camera_model) {
+void draw_textured_model_with_camera(const int width, const int height, Model &model, Mat44f &camera_model) {
     TImage image(width, height);
     const TColour cream(240, 226, 182);
     image.setColour(cream);
@@ -186,7 +141,19 @@ void draw_textured_model_proj(const int width, const int height, Model &model, M
     }
 
     free(zbuffer);
-    image.write("./out/texture_mapped_proj.tga");
+    image.write("./out/texture_mapped.tga");
+}
+
+void draw_textured_model_proj(const int width, const int height, Model &model, bool is_perspective) {
+    if (is_perspective) {
+        Mat33f rotation_mat = rotation_z(0).mul<3, 3>(rotation_x(0).mul<3, 3>(rotation_z(0)));
+        Mat44f rotation_mat_homo = to_homogeneous<3>(rotation_mat);
+        Mat44f camera_model_perspective = get_3d_camera_model(4) + rotation_mat_homo - identity<4>();
+        draw_textured_model_with_camera(width, height, model, camera_model_perspective);
+    } else {
+        Mat44f camera_model_ortho = identity<4>();
+        draw_textured_model_with_camera(width, height, model, camera_model_ortho);
+    }
 }
 
 int main() {
@@ -194,13 +161,7 @@ int main() {
     m.loadModel("../models/african_head.obj", true);
     m.loadTextures("../models/african_head_diffuse.tga");
 
-    Mat33f rotation_mat = rotation_z(0).mul<3, 3>(rotation_x(0).mul<3, 3>(rotation_z(0)));
-    Mat44f rotation_mat_homo = to_homogeneous<3>(rotation_mat);
-
-    Mat44f camera_model_proj = get_3d_camera_model(4) + rotation_mat_homo - identity<4>();
-
-    draw_textured_model_proj(500, 500, m, camera_model_proj);
-    draw_textured_model_ortho(500, 500, m);
+    draw_textured_model_proj(500, 500, m, false);
     // draw_red_flat_triangles(500, 500, m);
     // draw_normal_inensity_mapped_triangles(500, 500, m);
     // draw_wireframe(500, 500, m);
