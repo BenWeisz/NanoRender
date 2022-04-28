@@ -49,8 +49,37 @@ Mat33f rotation_x(const float angle) {
     return r;
 }
 
-Mat44f get_3d_camera_model(const float c) {
+Mat44f get_projection_mat(const float c) {
     Mat44f r = identity<4>();
     r.set(-1 / c, 3, 2);
     return r;
+}
+
+Mat44f get_viewport_mat(const int x, const int y, const int width, const int height, const int depth) {
+    Mat44f r = identity<4>();
+    r.set(width / 2.0, 0, 0);
+    r.set(height / 2.0, 1, 1);
+    r.set(depth / 2.0, 2, 2);
+    r.set(depth / 2.0, 2, 3);
+    r.set(x + (width / 2.0), 0, 3);
+    r.set(y + (height / 2.0), 1, 3);
+
+    return r;
+}
+
+Mat44f get_view_mat(const Vec3f eye, const Vec3f center, const Vec3f up) {
+    Vec3f z = (eye - center).norm();
+    Vec3f x = up.cross(z).norm();
+    Vec3f y = z.cross(x).norm();
+
+    Mat44f Minv = identity<4>();
+    Mat44f tr = identity<4>();
+    for (int i = 0; i < 3; i++) {
+        Minv.set(x[i], 0, i);
+        Minv.set(y[i], 1, i);
+        Minv.set(z[i], 2, i);
+        tr.set(-eye[i], i, 3);
+    }
+
+    return Minv.mul<4, 4>(tr);
 }

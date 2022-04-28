@@ -270,6 +270,8 @@ Vec<float, N - 1> to_cartesian(const Vec<float, N> &vec) {
 
 Mat33f rotation_z(const float angle);
 Mat33f rotation_x(const float angle);
-Mat44f get_3d_camera_model(const float c);
+Mat44f get_projection_mat(const float c);
+Mat44f get_viewport_mat(const int x, const int y, const int width, const int height, const int depth);
+Mat44f get_view_mat(const Vec3f eye, const Vec3f center, const Vec3f up);
 
 #endif  // GEO_H
