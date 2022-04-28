@@ -28,3 +28,7 @@ Textured Model with Intensity Shading in Orthographic Projection
 Textured Model with Intensity Shading in Perspective Projection
 
 ![](samples/texture_mapped_proj.png)
+
+Textured Model with Repositioned Camera
+
+![](samples/texture_mapped_with_camera.png)

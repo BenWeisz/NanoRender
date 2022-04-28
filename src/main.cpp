@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "draw.h"
 #include "geometry.h"
@@ -107,9 +108,9 @@ void draw_textured_model_with_camera(const int width, const int height, Model &m
     Vec3f lighting_dir({0.0, 0.0, 1.0});
     lighting_dir = lighting_dir.norm();
 
-    int *zbuffer = new int[width * height];
+    float *zbuffer = new float[width * height];
     for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MAX;
+        zbuffer[i] = -std::numeric_limits<float>::max();
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
@@ -164,7 +165,9 @@ void draw_textured_model_simple_model_mat(const int width, const int height, Mod
     Vec3f eye = {1, 1, 3};
     Vec3f center = {0, 0, 0};
     Vec3f up = {0, 1, 0};
-    Mat44f projection_mat = get_projection_mat(4);
+    Mat44f projection_mat = identity<4>();
+    // projection_mat.set(-1.0 / (eye - center).magnitude(), 3, 2);
+    projection_mat.set(-1 / 6, 3, 2);
     Mat44f viewport_mat = get_viewport_mat(0, 0, width, height, 255);
     Mat44f view_mat = get_view_mat(eye, center, up);
     Mat44f total_screen_mat = viewport_mat.mul<4, 4>(projection_mat.mul<4, 4>(view_mat));
@@ -172,9 +175,9 @@ void draw_textured_model_simple_model_mat(const int width, const int height, Mod
     Vec3f lighting_dir({0.0, 0.0, 1.0});
     lighting_dir = lighting_dir.norm();
 
-    int *zbuffer = new int[width * height];
+    float *zbuffer = new float[width * height];
     for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MAX;
+        zbuffer[i] = -std::numeric_limits<float>::max();
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
@@ -198,7 +201,7 @@ void draw_textured_model_simple_model_mat(const int width, const int height, Mod
     }
 
     free(zbuffer);
-    image.write("./out/textured_with_camera.tga");
+    image.write("./out/texture_mapped_with_camera.tga");
 }
 
 int main() {
