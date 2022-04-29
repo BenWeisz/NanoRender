@@ -6,9 +6,11 @@
 #include "model.h"
 #include "timage.h"
 
-TColour red = {255, 0, 0};
-TColour green = {0, 255, 0};
-TColour white = {255, 255, 255};
+const TColour red = {255, 0, 0};
+const TColour green = {0, 255, 0};
+const TColour white = {255, 255, 255};
+const TColour black = {0, 0, 0};
+const TColour cream = {240, 226, 182};
 
 void draw_wireframe(const int width, const int height, const Model &model) {
     TImage image(width, height);
@@ -58,15 +60,14 @@ void draw_red_flat_triangles(const int width, const int height, const Model &mod
 
 void draw_normal_inensity_mapped_triangles(const int width, const int height, Model &model) {
     TImage image(width, height);
-    const TColour cream(240, 226, 182);
-    image.setColour(cream);
+    image.setColour(black);
 
     Vec3f lighting_dir({0.0, 0.0, 1.0});
     lighting_dir = lighting_dir.norm();
 
-    int *const zbuffer = new int[width * height];
+    float *const zbuffer = new float[width * height];
     for (int i = 0; i < width * height; i++)
-        zbuffer[i] = INT_MAX;
+        zbuffer[i] = -std::numeric_limits<float>::max();
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Vec3f v1 = model.m_faces.at(i)[0];
@@ -102,8 +103,7 @@ void draw_normal_inensity_mapped_triangles(const int width, const int height, Mo
 
 void draw_textured_model_with_camera(const int width, const int height, Model &model, Mat44f &camera_model) {
     TImage image(width, height);
-    const TColour cream(240, 226, 182);
-    image.setColour(cream);
+    image.setColour(black);
 
     Vec3f lighting_dir({0.0, 0.0, 1.0});
     lighting_dir = lighting_dir.norm();
@@ -114,7 +114,7 @@ void draw_textured_model_with_camera(const int width, const int height, Model &m
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
-        const TextureFace t_face = model.m_texture_faces.at(face.m_texture_id);
+        const TextureFace t_face = model.m_texture_faces.at(face.m_texture_face_id);
 
         const Vec3f v1 = to_cartesian<4>(camera_model.dot(to_homogeneous<3>(face[0])));
         const Vec3f v2 = to_cartesian<4>(camera_model.dot(to_homogeneous<3>(face[1])));
@@ -159,8 +159,7 @@ void draw_textured_model_proj(const int width, const int height, Model &model, b
 
 void draw_textured_model_simple_model_mat(const int width, const int height, Model &model) {
     TImage image(width, height);
-    const TColour cream(240, 226, 182);
-    image.setColour(cream);
+    image.setColour(black);
 
     Vec3f eye = {1, 1, 3};
     Vec3f center = {0, 0, 0};
@@ -181,7 +180,7 @@ void draw_textured_model_simple_model_mat(const int width, const int height, Mod
 
     for (int i = 0; i < model.m_faces.size(); i++) {
         const Face face = model.m_faces.at(i);
-        const TextureFace t_face = model.m_texture_faces.at(face.m_texture_id);
+        const TextureFace t_face = model.m_texture_faces.at(face.m_texture_face_id);
 
         const Vec3f v1 = to_cartesian<4>(total_screen_mat.dot(to_homogeneous<3>(face[0])));
         const Vec3f v2 = to_cartesian<4>(total_screen_mat.dot(to_homogeneous<3>(face[1])));
@@ -205,13 +204,16 @@ void draw_textured_model_simple_model_mat(const int width, const int height, Mod
 }
 
 int main() {
+    // Model m;
+    // m.loadModel("../models/african_head.obj", true);
+    // m.loadTextures("../models/african_head_diffuse.tga");
     Model m;
-    m.loadModel("../models/african_head.obj", true);
-    m.loadTextures("../models/african_head_diffuse.tga");
+    m.loadModel("../models/diablo3_pose.obj", true, true);
+    m.loadTextures("../models/diablo3_pose_diffuse.tga");
 
-    draw_textured_model_simple_model_mat(500, 500, m);
-    // draw_textured_model_proj(500, 500, m, false);
-    // draw_red_flat_triangles(500, 500, m);
-    // draw_normal_inensity_mapped_triangles(500, 500, m);
-    // draw_wireframe(500, 500, m);
+    draw_textured_model_simple_model_mat(1000, 1000, m);
+    draw_textured_model_proj(1000, 1000, m, true);
+    draw_red_flat_triangles(1000, 1000, m);
+    draw_normal_inensity_mapped_triangles(1000, 1000, m);
+    draw_wireframe(1000, 1000, m);
 }

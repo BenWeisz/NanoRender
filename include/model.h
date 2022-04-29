@@ -10,27 +10,36 @@
 class Face {
    public:
     Vec3f m_Data[3];
-    int m_texture_id;
+    int m_texture_face_id;
+    int m_normal_face_id;
     Face(const Vec3f v1, const Vec3f v2, const Vec3f v3);
-    Face(const Vec3f v1, const Vec3f v2, const Vec3f v3, int texture_id);
+    Face(const Vec3f v1, const Vec3f v2, const Vec3f v3, const int texture_face_id, const int normal_face_id);
     Vec3f operator[](int i) const;
 };
 
 class TextureFace {
    public:
     Vec2f m_Data[3];
-    TextureFace(const Vec2f v1, const Vec2f v2, const Vec2f v3e);
+    TextureFace(const Vec2f v1, const Vec2f v2, const Vec2f v3);
     Vec2f operator[](int i) const;
+};
+
+class NormalFace {
+   public:
+    Vec3f m_Data[3];
+    NormalFace(const Vec3f v1, const Vec3f v2, const Vec3f v3);
+    Vec3f operator[](int i) const;
 };
 
 class Model {
    public:
     ~Model();
-    void loadModel(const std::string &file_name, const bool load_textures);
+    void loadModel(const std::string &file_name, const bool load_textures, const bool load_normals);
     void loadTextures(const std::string &file_name);
     TColour getTextureColour(const Vec2f *uv_coords, const Vec3f &bary_coords);
     std::vector<Face> m_faces;
     std::vector<TextureFace> m_texture_faces;
+    std::vector<NormalFace> m_normal_faces;
     TImage *m_textures;
 };
 

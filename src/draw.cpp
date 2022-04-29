@@ -67,7 +67,7 @@ void flat_triangle(const Vec2f &v1, const Vec2f &v2, const Vec2f &v3, TImage &im
     }
 }
 
-void flat_triangle3(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &image, const TColour &colour, int *zbuffer) {
+void flat_triangle3(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &image, const TColour &colour, float *zbuffer) {
     const float max_x = std::max(v1[0], std::max(v2[0], v3[0]));
     const float max_y = std::max(v1[1], std::max(v2[1], v3[1]));
 
@@ -89,7 +89,7 @@ void flat_triangle3(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &i
 
                 const float z = v1[2] * bary_coords[0] + v2[2] * bary_coords[1] + v3[2] * bary_coords[2];
                 const int zbuffer_offset = dimensions.first * y + x;
-                if (zbuffer[zbuffer_offset] > z) {
+                if (zbuffer[zbuffer_offset] < z) {
                     image.setPixel(p[0], p[1], colour);
                     zbuffer[zbuffer_offset] = z;
                 }
