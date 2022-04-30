@@ -173,13 +173,24 @@ class Mat {
         Vec<T, M> r(vals);
         return r;
     }
+    template <size_t oM, size_t oN>
+    Mat<T, oM, oN> transposed() {
+        assert(is_numeric());
+        Mat<T, oM, oN> r;
+        for (int i = 0; i < oM; i++) {
+            for (int j = 0; j < oN; j++) {
+                r.set(get(i, j), j, i);
+            }
+        }
+        return r;
+    }
     bool is_numeric() const {
         return std::is_same<T, float>::value || std::is_same<T, double>::value;
     }
     friend std::ostream &operator<<(std::ostream &os, const Mat &v) {
         std::streamsize old_precision = os.precision(3);
         os << std::fixed << std::showpoint;
-        os << std::setprecision(3);
+        os << std::setprecision(4);
 
         for (int i = 0; i < M; i++) {
             os << "|";
@@ -221,6 +232,8 @@ bool point_is_on_right_side(const T &v1, const T &v2, const T &p) {
     const float dir_dydx = dir[1] / dir[0];
     return ((dir_dydx * mapped_p[0]) > mapped_p[1]) ^ (dir[0] * -1 >= 0);
 }
+
+int inverse_3d(const Mat33f &M, Mat33f &Minv);
 
 int barycentric_coords(Vec3f *const points, const Vec3f &query, Vec3f &out);
 

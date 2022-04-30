@@ -1,29 +1,55 @@
 #include "geometry.h"
 
-int barycentric_coords(Vec3f *points, const Vec3f &query, Vec3f &out) {
-    const float d11 = points[1][1] - points[2][1];
-    const float d21 = points[2][1] - points[0][1];
-    const float d31 = points[0][1] - points[1][1];
+int inverse_3d(const Mat33f &M, Mat33f &Minv) {
+    const float d11 = (M.get(1, 1) * M.get(2, 2)) - (M.get(1, 2) * M.get(2, 1));
+    const float d21 = (M.get(1, 2) * M.get(2, 0)) - (M.get(1, 0) * M.get(2, 2));
+    const float d31 = (M.get(1, 0) * M.get(2, 1)) - (M.get(1, 1) * M.get(2, 0));
 
-    const float det_A = (points[0][0] * d11) + (points[1][0] * d21) + (points[2][0] * d31);
+    const float det_A = (M.get(0, 0) * d11) + (M.get(0, 1) * d21) + (M.get(0, 2) * d31);
     if (det_A == 0)
         return -1;
 
-    const float d12 = points[2][0] - points[1][0];
-    const float d22 = points[0][0] - points[2][0];
-    const float d32 = points[1][0] - points[0][0];
+    const float d12 = (M.get(0, 2) * M.get(2, 1)) - (M.get(0, 1) * M.get(2, 2));
+    const float d22 = (M.get(0, 0) * M.get(2, 2)) - (M.get(0, 2) * M.get(2, 0));
+    const float d32 = (M.get(0, 1) * M.get(2, 0)) - (M.get(0, 0) * M.get(2, 1));
 
-    const float d13 = (points[1][0] * points[2][1]) - (points[2][0] * points[1][1]);
-    const float d23 = (points[2][0] * points[0][1]) - (points[0][0] * points[2][1]);
-    const float d33 = (points[0][0] * points[1][1]) - (points[1][0] * points[0][1]);
+    const float d13 = (M.get(0, 1) * M.get(1, 2)) - (M.get(0, 2) * M.get(1, 1));
+    const float d23 = (M.get(0, 2) * M.get(1, 0)) - (M.get(0, 0) * M.get(1, 2));
+    const float d33 = (M.get(0, 0) * M.get(1, 1)) - (M.get(0, 1) * M.get(1, 0));
 
-    const float c1 = ((d11 * query[0]) + (d12 * query[1]) + d13) / det_A;
-    const float c2 = ((d21 * query[0]) + (d22 * query[1]) + d23) / det_A;
-    const float c3 = ((d31 * query[0]) + (d32 * query[1]) + d33) / det_A;
-    if (c1 < 0 || c2 < 0 || c3 < 0)
+    Minv.set(d11, 0, 0);
+    Minv.set(d12, 0, 1);
+    Minv.set(d13, 0, 2);
+    Minv.set(d21, 1, 0);
+    Minv.set(d22, 1, 1);
+    Minv.set(d23, 1, 2);
+    Minv.set(d31, 2, 0);
+    Minv.set(d32, 2, 1);
+    Minv.set(d33, 2, 2);
+
+    Minv = Minv * (1.0 / det_A);
+    return 0;
+}
+
+int barycentric_coords(Vec3f *points, const Vec3f &query, Vec3f &out) {
+    Mat33f M;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            M.set(points[j][i], i, j);
+        }
+    }
+    for (int j = 0; j < 3; j++) {
+        M.set(1, 2, j);
+    }
+
+    Mat33f Minv;
+    int r = inverse_3d(M, Minv);
+    if (r != 0)
         return -1;
 
-    out = Vec3f({c1, c2, c3});
+    out = Minv.dot(query);
+    if (out[0] < 0 || out[1] < 0 || out[2] < 0) return -1;
+
     return 0;
 }
 
