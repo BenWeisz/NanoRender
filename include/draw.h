@@ -19,6 +19,4 @@ void flat_triangle3(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, TImage &i
 
 void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const float light_intensity, TImage &image, float *const zbuffer, const TextureFace &texture, Model &model);
 
-void p_buff();
-
 #endif  // DRAW_h
