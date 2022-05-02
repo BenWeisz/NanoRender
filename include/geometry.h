@@ -44,7 +44,7 @@ class Vec {
     bool is_numeric() const {
         return std::is_same<T, float>::value || std::is_same<T, double>::value;
     }
-    T magnitude() {
+    T magnitude() const {
         assert(is_numeric());
 
         T squared_sum = 0.0;
@@ -52,7 +52,7 @@ class Vec {
 
         return std::sqrt(squared_sum);
     }
-    Vec norm() {
+    Vec norm() const {
         assert(is_numeric());
 
         T mag = magnitude();
@@ -69,7 +69,7 @@ class Vec {
 
         return r;
     }
-    T dot(const Vec &other) {
+    T dot(const Vec &other) const {
         assert(is_numeric());
         T dot_product = 0.0;
         for (int i = 0; i < N; i++) dot_product += m_Data[i] * other.m_Data[i];
@@ -158,7 +158,7 @@ class Mat {
         }
         return r;
     }
-    Vec<T, M> dot(const Vec<T, M> &v) {
+    Vec<T, M> dot(const Vec<T, M> &v) const {
         assert(is_numeric());
         assert(v.is_numeric());
         T vals[M];
@@ -234,6 +234,7 @@ bool point_is_on_right_side(const T &v1, const T &v2, const T &p) {
 }
 
 int inverse_3d(const Mat33f &M, Mat33f &Minv);
+int inverse_4d(const Mat44f &M, Mat44f &Minv);
 
 int barycentric_coords(Vec3f *const points, const Vec3f &query, Vec3f &out);
 

@@ -129,3 +129,37 @@ void textured_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const 
         }
     }
 }
+
+void int_normal_triangle(const Vec3f &v1, const Vec3f &v2, const Vec3f &v3, const Mat33f &normals, const Vec3f &lighting_dir, TImage &image, float *const zbuffer, const TextureFace &texture, Model &model) {
+    const float max_x = std::max(v1[0], std::max(v2[0], v3[0]));
+    const float max_y = std::max(v1[1], std::max(v2[1], v3[1]));
+
+    const float min_x = std::min(v1[0], std::min(v2[0], v3[0]));
+    const float min_y = std::min(v1[1], std::min(v2[1], v3[1]));
+
+    const std::pair<uint16_t, uint16_t> dimensions = image.get_dimensions();
+
+    for (int y = (int)min_y; y <= (int)max_y; y++) {
+        for (int x = (int)min_x; x <= (int)max_x; x++) {
+            const Vec3f p({(float)x, (float)y, 1});
+
+            if (point_is_in_triangle<Vec3f>(v1, v2, v3, p) && image.is_pixel_in_bounds(x, y)) {
+                Vec3f points[3] = {v1, v2, v3};
+                Vec3f bary_coords;
+                int r = barycentric_coords(points, p, bary_coords);
+                if (r != 0)  // Can't get valid barycentric coordinates
+                    continue;
+
+                const float z = v1[2] * bary_coords[0] + v2[2] * bary_coords[1] + v3[2] * bary_coords[2];
+                const int zbuffer_offset = (dimensions.first * y) + x;
+                const Vec3f pixel_normal = normals.dot(bary_coords).norm();
+                const float intensity = lighting_dir.dot(pixel_normal);
+                if (zbuffer[zbuffer_offset] < z && intensity > 0) {
+                    TColour colour = model.getTextureColour(texture.m_Data, bary_coords) * intensity;
+                    image.setPixel(p[0], p[1], colour);
+                    zbuffer[zbuffer_offset] = z;
+                }
+            }
+        }
+    }
+}

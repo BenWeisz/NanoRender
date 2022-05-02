@@ -31,6 +31,41 @@ int inverse_3d(const Mat33f &M, Mat33f &Minv) {
     return 0;
 }
 
+int inverse_4d(const Mat44f &M, Mat44f &Minv) {
+    float
+        det_A =
+            (M.get(0, 3) * M.get(1, 2) * M.get(2, 1) * M.get(3, 0)) - (M.get(0, 2) * M.get(1, 3) * M.get(2, 1) * M.get(3, 0)) - (M.get(0, 3) * M.get(1, 1) * M.get(2, 2) * M.get(3, 0)) + (M.get(0, 1) * M.get(1, 3) * M.get(2, 2) * M.get(3, 0)) +
+            (M.get(0, 2) * M.get(1, 1) * M.get(2, 3) * M.get(3, 0)) - (M.get(0, 1) * M.get(1, 2) * M.get(2, 3) * M.get(3, 0)) - (M.get(0, 3) * M.get(1, 2) * M.get(2, 0) * M.get(3, 1)) + (M.get(0, 2) * M.get(1, 3) * M.get(2, 0) * M.get(3, 1)) +
+            (M.get(0, 3) * M.get(1, 0) * M.get(2, 2) * M.get(3, 1)) - (M.get(0, 0) * M.get(1, 3) * M.get(2, 2) * M.get(3, 1)) - (M.get(0, 2) * M.get(1, 0) * M.get(2, 3) * M.get(3, 1)) + (M.get(0, 0) * M.get(1, 2) * M.get(2, 3) * M.get(3, 1)) +
+            (M.get(0, 3) * M.get(1, 1) * M.get(2, 0) * M.get(3, 2)) - (M.get(0, 1) * M.get(1, 3) * M.get(2, 0) * M.get(3, 2)) - (M.get(0, 3) * M.get(1, 0) * M.get(2, 1) * M.get(3, 2)) + (M.get(0, 0) * M.get(1, 3) * M.get(2, 1) * M.get(3, 2)) +
+            (M.get(0, 1) * M.get(1, 0) * M.get(2, 3) * M.get(3, 2)) - (M.get(0, 0) * M.get(1, 1) * M.get(2, 3) * M.get(3, 2)) - (M.get(0, 2) * M.get(1, 1) * M.get(2, 0) * M.get(3, 3)) + (M.get(0, 1) * M.get(1, 2) * M.get(2, 0) * M.get(3, 3)) +
+            (M.get(0, 2) * M.get(1, 0) * M.get(2, 1) * M.get(3, 3)) - (M.get(0, 0) * M.get(1, 2) * M.get(2, 1) * M.get(3, 3)) - (M.get(0, 1) * M.get(1, 0) * M.get(2, 2) * M.get(3, 3)) + (M.get(0, 0) * M.get(1, 1) * M.get(2, 2) * M.get(3, 3));
+
+    if (det_A == 0)
+        return -1;
+
+    Minv.set((M.get(1, 2) * M.get(2, 3) * M.get(3, 1)) - (M.get(1, 3) * M.get(2, 2) * M.get(3, 1)) + (M.get(1, 3) * M.get(2, 1) * M.get(3, 2)) - (M.get(1, 1) * M.get(2, 3) * M.get(3, 2)) - (M.get(1, 2) * M.get(2, 1) * M.get(3, 3)) + (M.get(1, 1) * M.get(2, 2) * M.get(3, 3)), 0, 0);
+    Minv.set((M.get(0, 3) * M.get(2, 2) * M.get(3, 1)) - (M.get(0, 2) * M.get(2, 3) * M.get(3, 1)) - (M.get(0, 3) * M.get(2, 1) * M.get(3, 2)) + (M.get(0, 1) * M.get(2, 3) * M.get(3, 2)) + (M.get(0, 2) * M.get(2, 1) * M.get(3, 3)) - (M.get(0, 1) * M.get(2, 2) * M.get(3, 3)), 0, 1);
+    Minv.set((M.get(0, 2) * M.get(1, 3) * M.get(3, 1)) - (M.get(0, 3) * M.get(1, 2) * M.get(3, 1)) + (M.get(0, 3) * M.get(1, 1) * M.get(3, 2)) - (M.get(0, 1) * M.get(1, 3) * M.get(3, 2)) - (M.get(0, 2) * M.get(1, 1) * M.get(3, 3)) + (M.get(0, 1) * M.get(1, 2) * M.get(3, 3)), 0, 2);
+    Minv.set((M.get(0, 3) * M.get(1, 2) * M.get(2, 1)) - (M.get(0, 2) * M.get(1, 3) * M.get(2, 1)) - (M.get(0, 3) * M.get(1, 1) * M.get(2, 2)) + (M.get(0, 1) * M.get(1, 3) * M.get(2, 2)) + (M.get(0, 2) * M.get(1, 1) * M.get(2, 3)) - (M.get(0, 1) * M.get(1, 2) * M.get(2, 3)), 0, 3);
+    Minv.set((M.get(1, 3) * M.get(2, 2) * M.get(3, 0)) - (M.get(1, 2) * M.get(2, 3) * M.get(3, 0)) - (M.get(1, 3) * M.get(2, 0) * M.get(3, 2)) + (M.get(1, 0) * M.get(2, 3) * M.get(3, 2)) + (M.get(1, 2) * M.get(2, 0) * M.get(3, 3)) - (M.get(1, 0) * M.get(2, 2) * M.get(3, 3)), 1, 0);
+    Minv.set((M.get(0, 2) * M.get(2, 3) * M.get(3, 0)) - (M.get(0, 3) * M.get(2, 2) * M.get(3, 0)) + (M.get(0, 3) * M.get(2, 0) * M.get(3, 2)) - (M.get(0, 0) * M.get(2, 3) * M.get(3, 2)) - (M.get(0, 2) * M.get(2, 0) * M.get(3, 3)) + (M.get(0, 0) * M.get(2, 2) * M.get(3, 3)), 1, 1);
+    Minv.set((M.get(0, 3) * M.get(1, 2) * M.get(3, 0)) - (M.get(0, 2) * M.get(1, 3) * M.get(3, 0)) - (M.get(0, 3) * M.get(1, 0) * M.get(3, 2)) + (M.get(0, 0) * M.get(1, 3) * M.get(3, 2)) + (M.get(0, 2) * M.get(1, 0) * M.get(3, 3)) - (M.get(0, 0) * M.get(1, 2) * M.get(3, 3)), 1, 2);
+    Minv.set((M.get(0, 2) * M.get(1, 3) * M.get(2, 0)) - (M.get(0, 3) * M.get(1, 2) * M.get(2, 0)) + (M.get(0, 3) * M.get(1, 0) * M.get(2, 2)) - (M.get(0, 0) * M.get(1, 3) * M.get(2, 2)) - (M.get(0, 2) * M.get(1, 0) * M.get(2, 3)) + (M.get(0, 0) * M.get(1, 2) * M.get(2, 3)), 1, 3);
+    Minv.set((M.get(1, 1) * M.get(2, 3) * M.get(3, 0)) - (M.get(1, 3) * M.get(2, 1) * M.get(3, 0)) + (M.get(1, 3) * M.get(2, 0) * M.get(3, 1)) - (M.get(1, 0) * M.get(2, 3) * M.get(3, 1)) - (M.get(1, 1) * M.get(2, 0) * M.get(3, 3)) + (M.get(1, 0) * M.get(2, 1) * M.get(3, 3)), 2, 0);
+    Minv.set((M.get(0, 3) * M.get(2, 1) * M.get(3, 0)) - (M.get(0, 1) * M.get(2, 3) * M.get(3, 0)) - (M.get(0, 3) * M.get(2, 0) * M.get(3, 1)) + (M.get(0, 0) * M.get(2, 3) * M.get(3, 1)) + (M.get(0, 1) * M.get(2, 0) * M.get(3, 3)) - (M.get(0, 0) * M.get(2, 1) * M.get(3, 3)), 2, 1);
+    Minv.set((M.get(0, 1) * M.get(1, 3) * M.get(3, 0)) - (M.get(0, 3) * M.get(1, 1) * M.get(3, 0)) + (M.get(0, 3) * M.get(1, 0) * M.get(3, 1)) - (M.get(0, 0) * M.get(1, 3) * M.get(3, 1)) - (M.get(0, 1) * M.get(1, 0) * M.get(3, 3)) + (M.get(0, 0) * M.get(1, 1) * M.get(3, 3)), 2, 2);
+    Minv.set((M.get(0, 3) * M.get(1, 1) * M.get(2, 0)) - (M.get(0, 1) * M.get(1, 3) * M.get(2, 0)) - (M.get(0, 3) * M.get(1, 0) * M.get(2, 1)) + (M.get(0, 0) * M.get(1, 3) * M.get(2, 1)) + (M.get(0, 1) * M.get(1, 0) * M.get(2, 3)) - (M.get(0, 0) * M.get(1, 1) * M.get(2, 3)), 2, 3);
+    Minv.set((M.get(1, 2) * M.get(2, 1) * M.get(3, 0)) - (M.get(1, 1) * M.get(2, 2) * M.get(3, 0)) - (M.get(1, 2) * M.get(2, 0) * M.get(3, 1)) + (M.get(1, 0) * M.get(2, 2) * M.get(3, 1)) + (M.get(1, 1) * M.get(2, 0) * M.get(3, 2)) - (M.get(1, 0) * M.get(2, 1) * M.get(3, 2)), 3, 0);
+    Minv.set((M.get(0, 1) * M.get(2, 2) * M.get(3, 0)) - (M.get(0, 2) * M.get(2, 1) * M.get(3, 0)) + (M.get(0, 2) * M.get(2, 0) * M.get(3, 1)) - (M.get(0, 0) * M.get(2, 2) * M.get(3, 1)) - (M.get(0, 1) * M.get(2, 0) * M.get(3, 2)) + (M.get(0, 0) * M.get(2, 1) * M.get(3, 2)), 3, 1);
+    Minv.set((M.get(0, 2) * M.get(1, 1) * M.get(3, 0)) - (M.get(0, 1) * M.get(1, 2) * M.get(3, 0)) - (M.get(0, 2) * M.get(1, 0) * M.get(3, 1)) + (M.get(0, 0) * M.get(1, 2) * M.get(3, 1)) + (M.get(0, 1) * M.get(1, 0) * M.get(3, 2)) - (M.get(0, 0) * M.get(1, 1) * M.get(3, 2)), 3, 2);
+    Minv.set((M.get(0, 1) * M.get(1, 2) * M.get(2, 0)) - (M.get(0, 2) * M.get(1, 1) * M.get(2, 0)) + (M.get(0, 2) * M.get(1, 0) * M.get(2, 1)) - (M.get(0, 0) * M.get(1, 2) * M.get(2, 1)) - (M.get(0, 1) * M.get(1, 0) * M.get(2, 2)) + (M.get(0, 0) * M.get(1, 1) * M.get(2, 2)), 3, 3);
+
+    Minv = Minv * (1 / det_A);
+
+    return 0;
+}
+
 int barycentric_coords(Vec3f *points, const Vec3f &query, Vec3f &out) {
     Mat33f M;
     for (int i = 0; i < 2; i++) {
